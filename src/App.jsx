@@ -6,7 +6,7 @@ import MediaLibrary from "./components/pages/MediaLibrary";
 import Properties from "./components/pages/Properties";
 import Settings from "./components/pages/Settings";
 import AdminLogin from "./components/pages/AdminLogin";
-
+import "bootstrap/dist/css/bootstrap.min.css";
 
 function App() {
   return (

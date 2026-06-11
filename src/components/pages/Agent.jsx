@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import logo from "../../assets/BOC-logo.png";
 import { Link, useLocation } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function NavIcon({ children }) {
   return <span style={{ flexShrink: 0 }}>{children}</span>;
 }
 
 function Agent() {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [selectedAgent, setSelectedAgent] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -48,6 +52,17 @@ function Agent() {
     }, 300);
   };
 
+  const handleDeleteClick = () => {
+    setDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    setDeleteModal(false);
+    setSuccessModal(true);
+    onSubmit?.("delete");
+    console.log("property deleted");
+  };
+
   const handleSubmit = (newAgent) => {
     const agentToAdd = {
       id: Date.now(),
@@ -58,6 +73,7 @@ function Agent() {
 
   // Add Agent//
   const AddAgentForm = ({ onSubmit }) => {
+    const [addAgentModal, setAddAgentModal] = useState(false);
     const [formData, , setFormData] = useState({
       name: "",
       type: "",
@@ -67,6 +83,21 @@ function Agent() {
       featured: "",
       image: "",
     });
+
+    const handleCancelAddClick = () => {
+      setIsOpen(false);
+    };
+
+    const handleSaveAddClick = () => {
+      setAddAgentModal(true);
+    };
+
+    const confirmAddAgent = () => {
+      setAddAgentModal(false);
+      onSubmit?.("addagent");
+      console.log("Agent Added");
+    };
+
     const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
       setFormData((prev) => ({
@@ -206,18 +237,78 @@ function Agent() {
 
         <div className="row justify-content-center mt-3">
           <button
+            onClick={handleCancelAddClick}
             className="col-5 p-1 me-2 btn-sm  border rounded-3"
             style={{ border: "1px solid  #F3F4F6" }}
           >
             Cancel
           </button>
           <button
+            onClick={handleSaveAddClick}
             className="col-5 p-1 btn-sm rounded-3 text-white"
             style={{ backgroundColor: " #003A8C" }}
           >
             Add Agent
           </button>
         </div>
+        <Modal
+          show={addAgentModal}
+          onHide={() => setAddAgentModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Agent Added Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            The Agent has been listed and viewers will be able to see property
+            assigned to the agent and their contact information.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+            <Button
+              onClick={handleCancelAddClick}
+              type="button"
+              className=""
+              variant=""
+              style={{
+                backgroundColor: " #003A8C",
+                color: "white",
+                width: "57vh",
+              }}
+            >
+              Return to dashboard
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </form>
     );
   };
@@ -229,6 +320,7 @@ function Agent() {
   };
 
   const EditAgentForm = ({ onSubmit }) => {
+    const [editAgentModal, setEditAgentModal] = useState(false);
     const [formData, , setFormData] = useState({
       name: "",
       type: "",
@@ -238,6 +330,21 @@ function Agent() {
       featured: "",
       image: "",
     });
+
+    const handleEditAgent = () => {
+      setEditAgentModal(true);
+    };
+
+    const confirmEditAgent = () => {
+      AddAgentModal(false);
+      onSubmit?.("editagent");
+      console.log("Agent updated");
+    };
+
+    const handleCancelAgent = () => {
+      setIsOpen(false);
+    };
+
     const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
       setFormData((prev) => ({
@@ -377,18 +484,78 @@ function Agent() {
 
         <div className="row justify-content-center mt-3">
           <button
+            onClick={handleCancelAgent}
             className="col-5 p-1 me-2 btn-sm  border rounded-3"
             style={{ border: "1px solid  #F3F4F6" }}
           >
             Cancel
           </button>
           <button
+            onClick={handleEditAgent}
             className="col-5 p-1 btn-sm rounded-3 text-white"
             style={{ backgroundColor: " #003A8C" }}
           >
             Save Agent
           </button>
         </div>
+        <Modal
+          show={editAgentModal}
+          onHide={() => setEditAgentModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Agent Details Updated Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            The Agent has been updated and viewers will be able to see property
+            assigned to the agent and their contact information.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+            <Button
+              onClick={handleCancelAgent}
+              type="button"
+              className=""
+              variant=""
+              style={{
+                backgroundColor: " #003A8C",
+                color: "white",
+                width: "57vh",
+              }}
+            >
+              Return to dashboard
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </form>
     );
   };
@@ -997,15 +1164,140 @@ function Agent() {
                       onClick={handleOpenEdit}
                       className=""
                     >
-                      
-                      
                       <EditIcon />
                     </div>
-                    <DeleteIcon />
+                    <div onClick={handleDeleteClick}>
+                      <DeleteIcon />
+                    </div>
                   </div>
                 </div>
               ))}
+              <Modal
+                show={deleteModal}
+                onHide={() => setDeleteModal(false)}
+                centered
+                backdrop="static"
+                contentClassName="blur-modal"
+                className="text-center"
+              >
+                <svg
+                  className="align-self-center mt-3"
+                  width="42"
+                  height="42"
+                  viewBox="0 0 42 42"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M34.125 9.625L33.0405 27.1689C32.7633 31.6512 32.6249 33.8924 31.5014 35.5038C30.9458 36.3004 30.2307 36.9728 29.4012 37.478C27.7237 38.5 25.4782 38.5 20.9872 38.5C16.4905 38.5 14.242 38.5 12.5633 37.4761C11.7334 36.97 11.018 36.2964 10.4627 35.4984C9.33954 33.8845 9.20404 31.6402 8.93307 27.1516L7.875 9.625"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M5.25 9.625H36.75M28.0975 9.625L26.9029 7.16053C26.1093 5.52346 25.7124 4.70491 25.028 4.19442C24.8762 4.08118 24.7154 3.98044 24.5473 3.89322C23.7893 3.5 22.8797 3.5 21.0604 3.5C19.1954 3.5 18.263 3.5 17.4924 3.90971C17.3217 4.00052 17.1587 4.10533 17.0053 4.22305C16.3129 4.75423 15.9261 5.60271 15.1526 7.29971L14.0926 9.625"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M16.625 28.875V18.375"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M25.375 28.875V18.375"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                </svg>
 
+                <Modal.Header className="align-self-center border-0">
+                  <Modal.Title>Delete Agent</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  The Agent will be deleted and viewers will no longer be able
+                  to see agent and their contact information.
+                </Modal.Body>
+                <Modal.Footer className="justify-content-between border-0">
+                  <Button
+                    type="button"
+                    className=""
+                    variant="outline-secondary"
+                    onClick={() => setDeleteModal(false)}
+                    style={{ width: "200px" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    className="text-white"
+                    variant=""
+                    onClick={confirmDelete}
+                    style={{ backgroundColor: "#EF4343", width: "200px" }}
+                  >
+                    Yes, Delete
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+              <Modal
+                show={successModal}
+                onHide={() => setSuccessModal(false)}
+                centered
+                backdrop="static"
+                contentClassName="blur-modal"
+                className="text-center"
+              >
+                <svg
+                  className="mt-3 align-self-center"
+                  width="80"
+                  height="80"
+                  viewBox="0 0 80 80"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+                    fill="#DCFCE7"
+                  />
+                  <path
+                    d="M39.9997 56.6663C49.2044 56.6663 56.6663 49.2044 56.6663 39.9997C56.6663 30.7949 49.2044 23.333 39.9997 23.333C30.7949 23.333 23.333 30.7949 23.333 39.9997C23.333 49.2044 30.7949 56.6663 39.9997 56.6663Z"
+                    stroke="#00A63E"
+                    stroke-width="3.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M35 40.0003L38.3333 43.3337L45 36.667"
+                    stroke="#00A63E"
+                    stroke-width="3.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <Modal.Header className="align-self-center border-0">
+                  <Modal.Title>Agent Deleted Successfully</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  The Agent has been listed and viewers will be able to see
+                  property assigned to the agent and their contact information.
+                </Modal.Body>
+                <Modal.Footer className="justify-content-between border-0">
+                  <Button
+                    type="button"
+                    className="text-white"
+                    variant=""
+                    onClick={() => setSuccessModal(false)}
+                    style={{ backgroundColor: "#003A8C", width: "57vh" }}
+                  >
+                    Return to Dashboard
+                  </Button>
+                </Modal.Footer>
+              </Modal>
               <p
                 className="text-secondary fw-light px-3 py-2 text-start"
                 style={{ fontSize: "18px" }}

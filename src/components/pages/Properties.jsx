@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import logo from "../../assets/BOC-logo.png";
 import { Link, useLocation } from "react-router-dom";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function NavIcon({ children }) {
   return <span style={{ flexShrink: 0 }}>{children}</span>;
 }
 
 function Properties() {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [viewedProperty, setViewedProperty] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -112,6 +116,18 @@ function Properties() {
     setViewedProperty(null);
   };
 
+  const handleDeleteClick = (property) => {
+    setSelectedProperty(property);
+    setDeleteModal(true);
+  };
+
+  const confirmDelete = () => {
+    setDeleteModal(false);
+    setSuccessModal(true);
+    onSubmit?.("delete");
+    console.log("property deleted", selectedProperty.id);
+  };
+
   const handleOpenView = (property) => {
     setDrawerMode("view");
     setIsOpen(true);
@@ -129,6 +145,24 @@ function Properties() {
       featured: "",
       image: "",
     });
+
+    
+    const [publishAddModal, setPublishAddModal] = useState(false);
+    const handleCancelAddClick = () => {
+      setIsOpen(false);
+    };
+
+    const handlePublishAddClick = () => {
+      setPublishAddModal(true);
+      
+    };
+    
+    const confirmPublish = () => {
+      setPublishModal(false);
+      onSubmit?.("publish");
+      console.log("Listing published");
+    };
+  
     const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
       setFormData((prev) => ({
@@ -432,23 +466,99 @@ function Properties() {
         </div>
         <div className="row justify-content-end mt-3">
           <button
+          onClick={handleCancelAddClick}
             className="col-3 p-1 me-2 btn-sm border rounded-3"
             style={{ border: "1px solid #F3F4F6" }}
           >
             Cancel Listing
           </button>
           <button
+           onClick={handlePublishAddClick}
             className="col-3 p-1 btn-sm rounded-3 text-white"
             style={{ backgroundColor: "#003A8C" }}
           >
             Publish Listing
           </button>
         </div>
+        
+        <Modal
+          show={publishAddModal}
+          onHide={() => setPublishAddModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Property Listed Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Your property details has been listed and updated to the platform. Viewers will be able to see property and its details.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+        
+              <Button
+              onClick={handleCancelAddClick}
+                type="button"
+                className=""
+                variant=""
+                style={{ backgroundColor: " #003A8C", color: "white", width:"57vh"}}
+              >
+                Return to dashboard
+              </Button>
+            
+          </Modal.Footer>
+        </Modal>
       </form>
     );
   };
 
+  
+
   const EditPropertyForm = ({ onSubmit }) => {
+    
+    const [publishModal, setPublishModal] = useState(false);
+    const handleCancelClick = () => {
+      setIsOpen(false);
+    };
+
+    const handlePublishClick = () => {
+      setPublishModal(true);
+      
+    };
+    
+    const confirmPublish = () => {
+      setPublishModal(false);
+      onSubmit?.("publish");
+      console.log("Listing published");
+    };
     const [formData, , setFormData] = useState({});
     const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
@@ -693,18 +803,77 @@ function Properties() {
         </div>
         <div className="row justify-content-end mt-3">
           <button
+            onClick={handleCancelClick}
             className="col-3 p-1 me-2 btn-sm border rounded-3"
             style={{ border: "1px solid #F3F4F6" }}
           >
             Cancel Listing
           </button>
           <button
+            onClick={handlePublishClick}
             className="col-3 p-1 btn-sm rounded-3 text-white"
             style={{ backgroundColor: "#003A8C" }}
           >
             Publish Listing
           </button>
         </div>
+        
+        <Modal
+          show={publishModal}
+          onHide={() => setPublishModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Property Updated Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Your property has been updated to the platform. Viewers
+            will be able to see property and its details.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+            
+              <Button
+              onClick={handleCancelClick}
+                type="button"
+                className=""
+                variant=""
+                style={{ backgroundColor: " #003A8C", color: "white", width:"57vh"}}
+              >
+                Return to dashboard
+              </Button>
+        
+          </Modal.Footer>
+        </Modal>
       </form>
     );
   };
@@ -1300,7 +1469,7 @@ function Properties() {
                     <div
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleOpenDelete(property)
+                        handleDeleteClick(property);
                       }}
                     >
                       <DeleteIcon />
@@ -1308,6 +1477,136 @@ function Properties() {
                   </div>
                 </div>
               ))}
+              <Modal
+                show={deleteModal}
+                onHide={() => setDeleteModal(false)}
+                centered
+                backdrop="static"
+                contentClassName="blur-modal"
+                className="text-center"
+              >
+                <svg
+                  className="align-self-center mt-3"
+                  width="42"
+                  height="42"
+                  viewBox="0 0 42 42"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M34.125 9.625L33.0405 27.1689C32.7633 31.6512 32.6249 33.8924 31.5014 35.5038C30.9458 36.3004 30.2307 36.9728 29.4012 37.478C27.7237 38.5 25.4782 38.5 20.9872 38.5C16.4905 38.5 14.242 38.5 12.5633 37.4761C11.7334 36.97 11.018 36.2964 10.4627 35.4984C9.33954 33.8845 9.20404 31.6402 8.93307 27.1516L7.875 9.625"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M5.25 9.625H36.75M28.0975 9.625L26.9029 7.16053C26.1093 5.52346 25.7124 4.70491 25.028 4.19442C24.8762 4.08118 24.7154 3.98044 24.5473 3.89322C23.7893 3.5 22.8797 3.5 21.0604 3.5C19.1954 3.5 18.263 3.5 17.4924 3.90971C17.3217 4.00052 17.1587 4.10533 17.0053 4.22305C16.3129 4.75423 15.9261 5.60271 15.1526 7.29971L14.0926 9.625"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M16.625 28.875V18.375"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                  <path
+                    d="M25.375 28.875V18.375"
+                    stroke="#EF4343"
+                    stroke-width="3"
+                    stroke-linecap="round"
+                  />
+                </svg>
+
+                <Modal.Header className="align-self-center border-0">
+                  <Modal.Title>Delete Property</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  The property will be deleted and viewers will no longer be
+                  able to see this property and the details.
+                </Modal.Body>
+                <Modal.Footer className="justify-content-between border-0">
+                  <Button
+                    type="button"
+                    className=""
+                    variant="outline-secondary"
+                    onClick={() => setDeleteModal(false)}
+                    style={{ width: "200px" }}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="button"
+                    className="text-white"
+                    variant=""
+                    onClick={confirmDelete}
+                    style={{ backgroundColor: "#EF4343", width: "200px" }}
+                  >
+                    Yes, Delete
+                  </Button>
+                </Modal.Footer>
+              </Modal>
+
+              <Modal
+                show={successModal}
+                onHide={() => setSuccessModal(false)}
+                centered
+                backdrop="static"
+                contentClassName="blur-modal"
+                className="text-center"
+              >
+                <svg
+                className="mt-3 align-self-center"
+                  width="80"
+                  height="80"
+                  viewBox="0 0 80 80"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+                    fill="#DCFCE7"
+                  />
+                  <path
+                    d="M39.9997 56.6663C49.2044 56.6663 56.6663 49.2044 56.6663 39.9997C56.6663 30.7949 49.2044 23.333 39.9997 23.333C30.7949 23.333 23.333 30.7949 23.333 39.9997C23.333 49.2044 30.7949 56.6663 39.9997 56.6663Z"
+                    stroke="#00A63E"
+                    stroke-width="3.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M35 40.0003L38.3333 43.3337L45 36.667"
+                    stroke="#00A63E"
+                    stroke-width="3.33333"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+
+                <Modal.Header className="align-self-center border-0">
+                  <Modal.Title>Property Deleted Successfully</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Your property details has been removed from the platform.
+                  Viewers will no longer be able to see property and its
+                  details.
+                </Modal.Body>
+                <Modal.Footer className="justify-content-between border-0">
+                  
+                  <Button
+                  
+                    type="button"
+                    className="text-white"
+                    variant=""
+                    onClick={() => setSuccessModal(false)}
+                    style={{ backgroundColor: "#003A8C", width:"57vh" }}
+                  >
+                    Return to Dashboard
+                  </Button>
+            
+                </Modal.Footer>
+              </Modal>
 
               <p
                 className="text-secondary fw-light px-3 py-2 text-start"
@@ -1443,11 +1742,30 @@ function Properties() {
                     View
                   </span>
                   <p className="col-12 col-lg-2 fw-lighter ms-0 text-nowrap">
-                    <svg className="me-1" width="16" height="16" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
-{viewedProperty.location},{viewedProperty.city}
+                    <svg
+                      className="me-1"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {viewedProperty.location},{viewedProperty.city}
                     <p className="col-12 col-lg-2 fw-bolder ms-0 text-nowrap">
                       {viewedProperty.price}
                     </p>
@@ -1538,10 +1856,30 @@ function Properties() {
                     View
                   </span>
                   <p className="col-12 col-lg-2 fw-lighter ms-0 text-nowrap">
-                   <svg className="me-1" width="16" height="16" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-</svg> {viewedProperty.location1},{viewedProperty.city}
+                    <svg
+                      className="me-1"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>{" "}
+                    {viewedProperty.location1},{viewedProperty.city}
                     <p className="col-12 col-lg-2 fw-bolder ms-0 text-nowrap">
                       {viewedProperty.price1}
                     </p>
@@ -1632,10 +1970,30 @@ function Properties() {
                     View
                   </span>
                   <p className="col-12 col-lg-2 fw-lighter ms-0 text-nowrap">
-                    <svg className="me-1" width="16" height="16" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z" stroke="#99A1AF" stroke-width="0.833333" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>{viewedProperty.location},{viewedProperty.city}
+                    <svg
+                      className="me-1"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 10 10"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8.33317 4.16634C8.33317 6.24676 6.02525 8.41342 5.25025 9.08259C5.17806 9.13688 5.09017 9.16624 4.99984 9.16624C4.9095 9.16624 4.82162 9.13688 4.74942 9.08259C3.97442 8.41342 1.6665 6.24676 1.6665 4.16634C1.6665 3.28229 2.01769 2.43444 2.64281 1.80932C3.26794 1.1842 4.11578 0.833008 4.99984 0.833008C5.88389 0.833008 6.73174 1.1842 7.35686 1.80932C7.98198 2.43444 8.33317 3.28229 8.33317 4.16634Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M5 5.41699C5.69036 5.41699 6.25 4.85735 6.25 4.16699C6.25 3.47664 5.69036 2.91699 5 2.91699C4.30964 2.91699 3.75 3.47664 3.75 4.16699C3.75 4.85735 4.30964 5.41699 5 5.41699Z"
+                        stroke="#99A1AF"
+                        stroke-width="0.833333"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {viewedProperty.location},{viewedProperty.city}
                     <p className="col-12 col-lg-2 fw-bolder ms-0 text-nowrap">
                       {viewedProperty.price}
                     </p>

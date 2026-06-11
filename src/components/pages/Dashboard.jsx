@@ -1,18 +1,738 @@
 import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css'
+import "bootstrap/dist/css/bootstrap.min.css";
 import logo from "../../assets/BOC-logo.png";
 import PurchaseTypeChart from "./PurchaseTypeChart";
 import { Link, useLocation } from "react-router-dom";
-
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function NavIcon({ children }) {
   return <span style={{ flexShrink: 0 }}>{children}</span>;
 }
 
 function Dashboard() {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [successModal, setSuccessModal] = useState(false);
+  const [selectedAgent, setSelectedAgent] = useState(null);
+  const [selectedProperty, setSelectedProperty] = useState(null);
+  const [viewedProperty, setViewedProperty] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isOpenProperty, setIsOpenProperty] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [drawerMode, setDrawerMode] = useState(null);
 
-  // Inside Dashboard component:
+  const handleOpenAdd = () => {
+    setDrawerMode("add");
+    setIsOpen(true);
+    setSelectedAgent(null);
+  };
+
+  const handleOpenClose = () => {
+    setIsOpen(false);
+    setTimeout(() => {
+      setDrawerMode("null");
+      setSelectedAgent(null);
+    }, 300);
+  };
+
+  const handleSubmit = (newAgent) => {
+    const agentToAdd = {
+      id: Date.now(),
+      ...newAgent,
+      image: newAgent.image || "/placeholder.jpg",
+    };
+  };
+
+  // Add Property
+
+  const AddPropertyForm = ({ onSubmit }) => {
+    const [formData, , setFormData] = useState({
+      name: "",
+      type: "",
+      decription: "",
+      agent: "",
+      price: "",
+      featured: "",
+      image: "",
+    });
+
+    
+    const [publishAddModal, setPublishAddModal] = useState(false);
+    const handleCancelAddClick = () => {
+      setIsOpenProperty(false);
+    };
+
+    const handlePublishAddClick = () => {
+      setPublishAddModal(true);
+    };
+    
+
+    const confirmPublish = () => {
+      setPublishModal(false);
+      onSubmit?.("publish");
+      console.log("Listing published");
+    };
+
+    const handleChangeProperty = (e) => {
+      const { name, value, type, checked } = e.target;
+      setFormData((prev) => ({
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    };
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onSubmit(formData);
+    };
+
+    return (
+      <form
+        className="m-3"
+        style={{ fontSize: "12px" }}
+        onSubmit={handleSubmitProperty}
+      >
+        <div className="mb-3 text-start">
+          <div className="d-flex justify-content-between">
+            <label
+              className="fw-bold form-label mb-0"
+              style={{ fontSize: "20px" }}
+            >
+              Add Property
+            </label>
+            <button
+              className="btn-close"
+              style={{ width: "5px" }}
+              onClick={handleCloseProperty}
+              aria-label="Close"
+            />
+          </div>
+          <p
+            className="text-muted pb-2 border-bottom"
+            style={{ fontSize: "12px" }}
+          >
+            Draft Saved at 3:42PM
+          </p>
+          <p className="h5 mb-2" style={{ color: "#003A8C" }}>
+            Basic Information
+          </p>
+          <p className="text-muted mb-0">PROPERTY TITLE</p>
+          <input
+            type="text"
+            name="name"
+            style={{ fontSize: "12px" }}
+            className="form-control bg-light"
+            placeholder="e.g Luxury 5 bedroom duplex"
+            onChange={handleChangeProperty}
+            required
+          />
+        </div>
+        <div className="row mb-0 text-start">
+          <label className="col-6 form-label text-secondary">
+            PROPERTY TYPE
+            <select
+              name="type"
+              className="bg-light form-select text-secondary"
+              style={{ fontSize: "12px" }}
+              onChange={handleChangeProperty}
+              required
+            >
+              <option value="">Select Type</option>
+              <option value="Apartment">Apartment</option>
+              <option value="House">House</option>
+              <option value="Duplex">Duplex</option>
+            </select>
+          </label>
+          <label className="col-6 form-label text-secondary">
+            FEATURED
+            <p
+              className="bg-light p-2 rounded-3 text-secondary border"
+              style={{ border: "1px solid #F3F4F6" }}
+            >
+              <input type="checkbox" className="me-1" />
+              Show on homepage
+            </p>
+          </label>
+        </div>
+        <div className="mb-3">
+          <label className="form-label text-start d-flex text-secondary">
+            DESCRIPTION
+          </label>
+          <p>
+            <input
+              placeholder="Describe the property features, neighbourhood, and highlights..."
+              type="text"
+              className="bg-light w-100 pb-5 ps-2 pt-2 rounded-3 text-secondary border"
+              style={{ border: "1px solid #F3F4F6", fontSize: "12px" }}
+            />
+          </p>
+        </div>
+        <div className="row mb-0 text-start">
+          <label className="col-6 form-label text-secondary">
+            ASSIGN AGENT
+            <select
+              name="type"
+              className="bg-light form-select text-secondary"
+              style={{ fontSize: "12px" }}
+              onChange={handleChangeProperty}
+              required
+            >
+              <option value="">Assign property to agent</option>
+              <option value="001">Agent 001 - Chariss Forbes</option>
+              <option value="002">Agent 002 - Boluwatife Cole</option>
+              <option value="003">Agent 003 - Ephraim Johnson</option>
+              <option value="004">Agent 004 - Adeleke David</option>
+            </select>
+          </label>
+          <label className="col-6 form-label text-secondary">
+            AMENITIES
+            <select
+              name="type"
+              className="bg-light form-select text-secondary"
+              style={{ fontSize: "12px" }}
+              onChange={handleChangeProperty}
+              required
+            >
+              <option value="">Select available amenities</option>
+              <option value="pool">Swimming Pool</option>
+              <option value="gym">Gym</option>
+              <option value="security">24/7 Security</option>
+              <option value="gen">Backup Generator</option>
+              <option value="cctv">CCTV</option>
+              <option value="kitchen">Fitted Kitchen</option>
+              <option value="ac">Air Conditioning</option>
+              <option value="borehole">Borehole</option>
+              <option value="parking">Parking</option>
+              <option value="garden">Garden</option>
+            </select>
+          </label>
+        </div>
+        <div className="justify-content-start mt-2 text-secondary">
+          <p className="h5 mb-2 text-start" style={{ color: "#003A8C" }}>
+            Price & Mode
+          </p>
+          <div className="row text-start">
+            <div className="col-6">
+              <p className="mb-1">Price (₦)</p>
+              <input
+                className="w-100 p-2 bg-light rounded-3 border"
+                type="number"
+                style={{ border: "1px solid #F3F4F6" }}
+              />
+            </div>
+            <div className="col-6">
+              <p className="mb-1">LISTING TYPE</p>
+              <p className="row">
+                <p
+                  className="btn col-2 bg-light border rounded-3 ms-3 me-2"
+                  style={{
+                    fontSize: "12px",
+                    width: "60px",
+                    border: "1px solid #F3F4F6",
+                  }}
+                >
+                  Buy
+                </p>
+                <p
+                  className="btn col-2 bg-light border rounded-3 me-2"
+                  style={{
+                    fontSize: "12px",
+                    width: "60px",
+                    border: "1px solid #F3F4F6",
+                  }}
+                >
+                  Rent
+                </p>
+                <p
+                  className="btn col-2 bg-light border rounded-3"
+                  style={{
+                    fontSize: "12px",
+                    width: "68px",
+                    border: "1px solid #F3F4F6",
+                  }}
+                >
+                  Lease
+                </p>
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="justify-content-start mt-2 text-secondary">
+          <p className="h5 mb-2 text-start" style={{ color: "#003A8C" }}>
+            Media Upload
+          </p>
+          <div className="col-12">
+            <div className="row">
+              <div className="col-12 col-lg-6 align-content-center">
+                <div className="bg-light rounded-3">
+                  <svg
+                    width="70"
+                    height="70"
+                    viewBox="0 0 70 70"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="3.5"
+                      y="2.5"
+                      width="63"
+                      height="63"
+                      rx="31.5"
+                      fill="white"
+                    />
+                    <rect
+                      x="3.5"
+                      y="2.5"
+                      width="63"
+                      height="63"
+                      rx="31.5"
+                      stroke="#F3F4F6"
+                    />
+                    <path
+                      d="M35 22V38"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M41.6668 28.6667L35.0002 22L28.3335 28.6667"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M47 38V43.3333C47 44.0406 46.719 44.7189 46.219 45.219C45.7189 45.719 45.0406 46 44.3333 46H25.6667C24.9594 46 24.2811 45.719 23.781 45.219C23.281 44.7189 23 44.0406 23 43.3333V38"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <p className="fw-bolder mb-1 text-dark">
+                    Click or drag images to upload
+                  </p>
+                  <p className="text-secondary" style={{ fontSize: "10px" }}>
+                    Up to 20 high-quality JPG, PNG or WEBP (max 5MB each)
+                  </p>
+                </div>
+              </div>
+              <div className="col-12 col-lg-6 align-content-center">
+                <div className="bg-light rounded-3">
+                  <svg
+                    width="70"
+                    height="70"
+                    viewBox="0 0 70 70"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <rect
+                      x="3.5"
+                      y="2.5"
+                      width="63"
+                      height="63"
+                      rx="31.5"
+                      fill="white"
+                    />
+                    <rect
+                      x="3.5"
+                      y="2.5"
+                      width="63"
+                      height="63"
+                      rx="31.5"
+                      stroke="#F3F4F6"
+                    />
+                    <path
+                      d="M35 22V38"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M41.6668 28.6667L35.0002 22L28.3335 28.6667"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <path
+                      d="M47 38V43.3333C47 44.0406 46.719 44.7189 46.219 45.219C45.7189 45.719 45.0406 46 44.3333 46H25.6667C24.9594 46 24.2811 45.719 23.781 45.219C23.281 44.7189 23 44.0406 23 43.3333V38"
+                      stroke="#D1D5DC"
+                      strokeWidth="2.66667"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                  <p className="fw-bolder mb-1 text-dark">
+                    Click or drag images to upload
+                  </p>
+                  <p className="text-secondary" style={{ fontSize: "10px" }}>
+                    Up to 20 high-quality JPG, PNG or WEBP (max 5MB each)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="row justify-content-end mt-3">
+          <button
+           onClick={handleCancelAddClick}
+            className="col-3 p-1 me-2 btn-sm border rounded-3"
+            style={{ border: "1px solid #F3F4F6" }}
+          >
+            Cancel Listing
+          </button>
+          <button
+            onClick={handlePublishAddClick}
+            className="col-3 p-1 btn-sm rounded-3 text-white"
+            style={{ backgroundColor: "#003A8C" }}
+          >
+            Publish Listing
+          </button>
+        </div>
+        
+        <Modal
+          show={publishAddModal}
+          onHide={() => setPublishAddModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Property Listed Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Your property details has been listed and updated to the platform.
+            Viewers will be able to see property and its details.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+            
+              <Button
+              onClick={handleCancelAddClick}
+                type="button"
+                className=""
+                variant=""
+                style={{
+                  backgroundColor: " #003A8C",
+                  color: "white",
+                  width: "57vh",
+                }}
+              >
+                Return to dashboard
+              </Button>
+            
+          </Modal.Footer>
+        </Modal>
+        
+      </form>
+    );
+  };
+
+  const handleOpenProperty = () => {
+    setDrawerMode("addproperty");
+    setIsOpenProperty(true);
+    setIsOpen(false);
+    setSelectedProperty(null);
+    setViewedProperty(null);
+  };
+
+  const handleCloseProperty = () => {
+    setIsOpen(false);
+    setIsOpenProperty(false);
+    setTimeout(() => {
+      setDrawerMode(null);
+      setSelectedProperty(null);
+      setViewedProperty(null);
+    }, 300);
+  };
+
+  const handleSubmitProperty = (newProperty) => {
+    const propertyToAdd = {
+      id: Date.now(),
+      ...newProperty,
+      image: newProperty.image || "/placeholder.jpg",
+    };
+  };
+
+  // Add agent
+  const AddAgentForm = ({ onSubmit }) => {
+    const [addAgentModal, setAddAgentModal] = useState(false);
+    const [formData, , setFormData] = useState({
+      name: "",
+      type: "",
+      decription: "",
+      agent: "",
+      price: "",
+      featured: "",
+      image: "",
+    });
+
+    const handleAddAgent = () => {
+      setAddAgentModal(true);
+      
+    };
+
+    const confirmAddAgent = () => {
+      AddAgentModal(false);
+      onSubmit?.("addagent");
+      console.log("Agent Added")
+    
+    };
+
+    const handleCancelAgent= () => {
+      setIsOpen(false);
+    };
+
+    
+
+    const handleChange = (e) => {
+      const { name, value, type, checked } = e.target;
+      setFormData((prev) => ({
+        [name]: type === "checkbox" ? checked : value,
+      }));
+    };
+    const handleSubmit = (e) => {
+      e.preventDefault();
+      onSubmit(formData);
+    };
+
+    return (
+      <form
+        className="m-3"
+        style={{ fontSize: "12px" }}
+        onSubmit={handleSubmit}
+      >
+        <div className="mb-3 text-start">
+          <div className="d-flex justify-content-between">
+            <label
+              className="fw-bold form-label mb-0"
+              style={{ fontSize: "20px" }}
+            >
+              Add Agent
+            </label>
+            <button
+              className="btn-close "
+              style={{ width: "5px" }}
+              onClick={handleOpenClose}
+              aria-label="Close"
+            />
+          </div>
+
+          <p className="text-muted mb-1 mt-4">FULL NAME</p>
+          <input
+            type="text"
+            name="name"
+            style={{ fontSize: "12px" }}
+            className="form-control bg-light"
+            placeholder="e.g Sarah Johnson"
+            onChange={handleChange}
+            required
+          />
+
+          <p className=" text-muted mb-1 mt-4">
+            JOB TITLE
+            <input
+              type="text"
+              name="name"
+              style={{ fontSize: "12px" }}
+              className="form-control bg-light"
+              placeholder="e.g Senior consultant"
+              onChange={handleChange}
+              required
+            />
+          </p>
+
+          <div className="row mb-0 text-start">
+            <p className="col-6  text-muted mb-1 mt-4">
+              EMAIL
+              <input
+                type="email"
+                name="name"
+                style={{ fontSize: "12px" }}
+                className="form-control bg-light"
+                placeholder="sarah@boc.com"
+                onChange={handleChange}
+                required
+              />
+            </p>
+            <p className="col-6  text-muted mb-1 mt-4">
+              PHONE
+              <input
+                type="text"
+                name="name"
+                style={{ fontSize: "12px" }}
+                className="form-control bg-light"
+                placeholder="+234..."
+                onChange={handleChange}
+                required
+              />
+            </p>
+          </div>
+
+          <div className="mb-3 ">
+            <label className=" form-label text-start d-flex text-secondary ">
+              BIO
+            </label>
+            <p>
+              <input
+                placeholder="Short professional bio..."
+                type="text"
+                className="bg-light w-100 pb-5 ps-2 pt-2 rounded-3 text-secondary border"
+                style={{ border: "1px solid #F3F4F6", fontSize: "12px" }}
+              />
+            </p>
+          </div>
+          <label className=" form-label text-start d-flex text-secondary ">
+            SPECIALIZATION
+          </label>
+          <div
+            className="row justify-content-evenly"
+            style={{ marginBottom: "70%" }}
+          >
+            <p
+              className="btn col-3 bg-light border  rounded-3 ms-3 me-2"
+              style={{
+                fontSize: "12px",
+
+                border: "1px solid #F3F4F6",
+              }}
+            >
+              Sales
+            </p>
+            <p
+              className="btn col-3 bg-light border rounded-3 me-2"
+              style={{
+                fontSize: "12px",
+
+                border: "1px solid #F3F4F6",
+              }}
+            >
+              Rentals
+            </p>
+            <p
+              className="btn col-3 bg-light border rounded-3 "
+              style={{
+                fontSize: "12px",
+
+                border: "1px solid #F3F4F6",
+              }}
+            >
+              Commercial
+            </p>
+          </div>
+        </div>
+
+        <div className="row justify-content-center mt-3">
+          
+          <button
+          onClick={handleCancelAgent}
+            className="col-5 p-1 me-2 btn-sm  border rounded-3"
+            style={{ border: "1px solid  #F3F4F6" }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleAddAgent}
+            className="col-5 p-1 btn-sm rounded-3 text-white"
+            style={{ backgroundColor: " #003A8C" }}
+          >
+            Add Agent
+          </button>
+        
+        </div>
+        <Modal
+          show={addAgentModal}
+          onHide={() => setAddAgentModal(false)}
+          centered
+          backdrop="static"
+          contentClassName="blur-modal"
+          className="text-center"
+        >
+          <svg
+            className="align-self-center mt-3"
+            width="80"
+            height="80"
+            viewBox="0 0 80 80"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 40C0 17.9086 17.9086 0 40 0C62.0914 0 80 17.9086 80 40C80 62.0914 62.0914 80 40 80C17.9086 80 0 62.0914 0 40Z"
+              fill="#DCFCE7"
+            />
+            <path
+              d="M40.0002 56.6663C49.2049 56.6663 56.6668 49.2044 56.6668 39.9997C56.6668 30.7949 49.2049 23.333 40.0002 23.333C30.7954 23.333 23.3335 30.7949 23.3335 39.9997C23.3335 49.2044 30.7954 56.6663 40.0002 56.6663Z"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+            <path
+              d="M35 40.0003L38.3333 43.3337L45 36.667"
+              stroke="#00A63E"
+              stroke-width="3.33333"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          <Modal.Header className="align-self-center border-0">
+            <Modal.Title>Agent Added Successfully</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            The Agent has been listed and viewers will be able to see property
+            assigned to the agent and their contact information.
+          </Modal.Body>
+          <Modal.Footer className="border-0">
+            
+              <Button
+               onClick={handleCancelAgent}
+                type="button"
+                className=""
+                variant=""
+                style={{
+                  backgroundColor: " #003A8C",
+                  color: "white",
+                  width: "57vh",
+                }}
+              >
+                Return to dashboard
+              </Button>
+        
+          </Modal.Footer>
+        </Modal>
+        
+      </form>
+    );
+  };
+
   const location = useLocation();
 
   const navItems = [
@@ -153,7 +873,6 @@ function Dashboard() {
     },
   ];
 
-  
   const listings = [
     {
       name: "Luxury 4-bedroom Duplex",
@@ -177,7 +896,6 @@ function Dashboard() {
 
   return (
     <>
-     
       <div className="boc-root">
         <div
           className={`sidebar-overlay ${sidebarOpen ? "open" : ""}`}
@@ -342,13 +1060,15 @@ function Dashboard() {
           <main className="page-body">
             <div className="page-header">
               <div>
-                <p className="page-title pe-5 text-start h2 fw-bold ">Dashboard Overview</p>
+                <p className="page-title pe-5 text-start h2 fw-bold ">
+                  Dashboard Overview
+                </p>
                 <p className="fw-semibold">
                   Welcome back, here's what's happening today
                 </p>
               </div>
               <div className="header-actions">
-                <button className="btn-outline">
+                <button onClick={handleOpenAdd} className="btn-outline">
                   <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
                     <path
                       d="M3.75 9h10.5M9 3.75v10.5"
@@ -359,7 +1079,7 @@ function Dashboard() {
                   </svg>
                   Add Agent
                 </button>
-                <button className="btn-primary">
+                <button onClick={handleOpenProperty} className="btn-primary">
                   <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
                     <path
                       d="M3.75 9h10.5M9 3.75v10.5"
@@ -548,6 +1268,25 @@ function Dashboard() {
             </div>
           </main>
         </div>
+      </div>
+      <div
+        className="drawer position-fixed top-0 end-0 h-100 bg-white shadow-lg overflow-auto"
+        style={{
+          zIndex: 1050,
+          transform:
+            isOpen || isOpenProperty ? "translateX(0)" : "translateX(100%)",
+          transition: "transform 0.3s ease-in-out",
+          width: "400px",
+        }}
+      >
+        {drawerMode === "add" && <AddAgentForm onSubmit={handleSubmit} />}
+        {drawerMode === "view" && selectedAgent && (
+          <AgentDetails property={selectedAgent} />
+        )}
+
+        {drawerMode === "addproperty" && (
+          <AddPropertyForm onSubmit={handleSubmitProperty} />
+        )}
       </div>
     </>
   );
