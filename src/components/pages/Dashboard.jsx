@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import logo from "../../assets/BOC-logo.png";
 import PurchaseTypeChart from "./PurchaseTypeChart";
 import { Link, useLocation } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
@@ -903,7 +902,7 @@ function Dashboard() {
         />
 
         <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          <img src={logo} alt="BOC Logo" className="sidebar-logo" />
+          <img src="/images/BOC-logo.png" alt="BOC Logo" className="sidebar-logo" />
 
           <nav>
             {navItems.map((item) => {

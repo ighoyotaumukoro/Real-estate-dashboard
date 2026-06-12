@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import logo from "../../assets/BOC-logo.png";
 import { Link, useLocation } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
@@ -865,7 +864,7 @@ function Agent() {
         />
 
         <aside className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          <img src={logo} alt="BOC Logo" className="sidebar-logo" />
+          <img src="/images/BOC-logo.png" alt="BOC Logo" className="sidebar-logo" />
           <nav>
             {navItems.map((item) => {
               const isActive = location.pathname === item.to;
