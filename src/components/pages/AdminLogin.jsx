@@ -32,7 +32,7 @@ function AdminLogin() {
               {/* Logo */}
               <div className="d-flex justify-content-center mb-3">
                 <img
-                  src="src/assets/BOC-logo.png"
+                  src="/images/BOC-logo.png"
                   style={{ height: "80px", objectFit: "contain" }}
                   alt="BOC Logo"
                 />

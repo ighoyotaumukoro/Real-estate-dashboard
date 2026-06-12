@@ -878,19 +878,19 @@ function Dashboard() {
       name: "Luxury 4-bedroom Duplex",
       location: "Lekki Phase-1, Lagos Island",
       price: "₦125,000,000",
-      img: "src/assets/Hotel-one.jpg",
+      img: "/images/Hotel-one.jpg",
     },
     {
       name: "Luxury 5-bedroom Duplex",
       location: "Lekki Phase-1, Lagos Island",
       price: "₦250,000,000",
-      img: "src/assets/Hotel-2.jpg",
+      img: "/images/Hotel-2.jpg",
     },
     {
       name: "Luxury 3-bedroom Duplex",
       location: "Lekki Phase-1, Lagos Island",
       price: "₦120,000,000",
-      img: "src/assets/Hotel-3.jpg",
+      img: "/images/Hotel-3.jpg",
     },
   ];
 

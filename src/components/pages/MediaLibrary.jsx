@@ -358,10 +358,10 @@ const navItems = [
 
             <div className="col-12">
               <div className="row g-3">
-                <img src="src/assets/Hotel-4.jpg" className="col-lg-3" style={{borderRadius:'30px'}}/>
-                <img src="src/assets/Hotel-3.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
-                <img src="src/assets/Hotel-2.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
-                <img src="src/assets/Hotel-one.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
+                <img src="/images/Hotel-4.jpg" className="col-lg-3" style={{borderRadius:'30px'}}/>
+                <img src="/images/Hotel-3.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
+                <img src="/images/Hotel-2.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
+                <img src="/images/Hotel-one.jpg" className="col-lg-3"style={{borderRadius:'30px'}}/>
               </div>
             </div>
           </main>

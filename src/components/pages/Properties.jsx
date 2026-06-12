@@ -146,7 +146,6 @@ function Properties() {
       image: "",
     });
 
-    
     const [publishAddModal, setPublishAddModal] = useState(false);
     const handleCancelAddClick = () => {
       setIsOpen(false);
@@ -154,15 +153,14 @@ function Properties() {
 
     const handlePublishAddClick = () => {
       setPublishAddModal(true);
-      
     };
-    
+
     const confirmPublish = () => {
       setPublishModal(false);
       onSubmit?.("publish");
       console.log("Listing published");
     };
-  
+
     const handleChange = (e) => {
       const { name, value, type, checked } = e.target;
       setFormData((prev) => ({
@@ -466,21 +464,21 @@ function Properties() {
         </div>
         <div className="row justify-content-end mt-3">
           <button
-          onClick={handleCancelAddClick}
+            onClick={handleCancelAddClick}
             className="col-3 p-1 me-2 btn-sm border rounded-3"
             style={{ border: "1px solid #F3F4F6" }}
           >
             Cancel Listing
           </button>
           <button
-           onClick={handlePublishAddClick}
+            onClick={handlePublishAddClick}
             className="col-3 p-1 btn-sm rounded-3 text-white"
             style={{ backgroundColor: "#003A8C" }}
           >
             Publish Listing
           </button>
         </div>
-        
+
         <Modal
           show={publishAddModal}
           onHide={() => setPublishAddModal(false)}
@@ -520,30 +518,30 @@ function Properties() {
             <Modal.Title>Property Listed Successfully</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Your property details has been listed and updated to the platform. Viewers will be able to see property and its details.
+            Your property details has been listed and updated to the platform.
+            Viewers will be able to see property and its details.
           </Modal.Body>
           <Modal.Footer className="border-0">
-        
-              <Button
+            <Button
               onClick={handleCancelAddClick}
-                type="button"
-                className=""
-                variant=""
-                style={{ backgroundColor: " #003A8C", color: "white", width:"57vh"}}
-              >
-                Return to dashboard
-              </Button>
-            
+              type="button"
+              className=""
+              variant=""
+              style={{
+                backgroundColor: " #003A8C",
+                color: "white",
+                width: "57vh",
+              }}
+            >
+              Return to dashboard
+            </Button>
           </Modal.Footer>
         </Modal>
       </form>
     );
   };
 
-  
-
   const EditPropertyForm = ({ onSubmit }) => {
-    
     const [publishModal, setPublishModal] = useState(false);
     const handleCancelClick = () => {
       setIsOpen(false);
@@ -551,9 +549,8 @@ function Properties() {
 
     const handlePublishClick = () => {
       setPublishModal(true);
-      
     };
-    
+
     const confirmPublish = () => {
       setPublishModal(false);
       onSubmit?.("publish");
@@ -817,7 +814,7 @@ function Properties() {
             Publish Listing
           </button>
         </div>
-        
+
         <Modal
           show={publishModal}
           onHide={() => setPublishModal(false)}
@@ -857,21 +854,23 @@ function Properties() {
             <Modal.Title>Property Updated Successfully</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            Your property has been updated to the platform. Viewers
-            will be able to see property and its details.
+            Your property has been updated to the platform. Viewers will be able
+            to see property and its details.
           </Modal.Body>
           <Modal.Footer className="border-0">
-            
-              <Button
+            <Button
               onClick={handleCancelClick}
-                type="button"
-                className=""
-                variant=""
-                style={{ backgroundColor: " #003A8C", color: "white", width:"57vh"}}
-              >
-                Return to dashboard
-              </Button>
-        
+              type="button"
+              className=""
+              variant=""
+              style={{
+                backgroundColor: " #003A8C",
+                color: "white",
+                width: "57vh",
+              }}
+            >
+              Return to dashboard
+            </Button>
           </Modal.Footer>
         </Modal>
       </form>
@@ -1557,7 +1556,7 @@ function Properties() {
                 className="text-center"
               >
                 <svg
-                className="mt-3 align-self-center"
+                  className="mt-3 align-self-center"
                   width="80"
                   height="80"
                   viewBox="0 0 80 80"
@@ -1593,18 +1592,15 @@ function Properties() {
                   details.
                 </Modal.Body>
                 <Modal.Footer className="justify-content-between border-0">
-                  
                   <Button
-                  
                     type="button"
                     className="text-white"
                     variant=""
                     onClick={() => setSuccessModal(false)}
-                    style={{ backgroundColor: "#003A8C", width:"57vh" }}
+                    style={{ backgroundColor: "#003A8C", width: "57vh" }}
                   >
                     Return to Dashboard
                   </Button>
-            
                 </Modal.Footer>
               </Modal>
 
